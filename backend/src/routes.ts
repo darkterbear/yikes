@@ -1,5 +1,6 @@
 import { IRouter } from 'express';
+import * as controller from './controllers';
 
 export default (app: IRouter) => {
-  app.get('/ping', (_, res) => res.send('pong').end());
+  app.post('/create', controller.create);
 };

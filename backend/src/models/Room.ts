@@ -13,7 +13,10 @@ export enum RoomState {
  * players, leader, and the collection of rounds.
  */
 export default class Room {
-  /** Code to join the room. */
+  /** Holds all rooms; map of code to Room object. */
+  public static rooms: Map<string, Room> = new Map();
+
+  /** Unique code to join the room. */
   public code!: string;
 
   /** General room state, as described by above enum. */

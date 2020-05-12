@@ -5,7 +5,10 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import Session, { SessionOptions } from 'express-session';
+import http from 'http';
+import Room from './models/Room';
 import route from './routes';
+import socket from './sockets';
 
 enum Environment {
   Production = 'production',
@@ -33,28 +36,32 @@ app.use(
 );
 
 /* SESSION */
-const session = {
+const sessionMiddleware = Session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   unset: 'destroy',
-  cookie: { secure: false },
-};
+  cookie: { secure: env === Environment.Production },
+});
 
 if (env === Environment.Production) {
-  app.set('trust proxy', 1); // Trust first proxy
-  session.cookie.secure = true; // Serve secure cookies
+  app.set('trust proxy', 1);
 }
 
-app.use(Session(session as SessionOptions));
+app.use(sessionMiddleware);
 app.use(cookieParser());
 
 /* ROUTES */
 route(app);
 
+const server = http.createServer(app);
+
+/* SOCKET.IO */
+socket(server, sessionMiddleware);
+
 /* BIND SERVICE TO PORT */
 if (process.env.NODE_ENV !== Environment.Test) {
-  app.listen(process.env.PORT, () => {
+  server.listen(process.env.PORT, () => {
     console.log(`Yikes API listening on port ${process.env.PORT}!`);
   });
 }
