@@ -13,6 +13,9 @@ export enum RoomState {
  * players, leader, and the collection of rounds.
  */
 export default class Room {
+  /** Code to join the room. */
+  public code!: string;
+
   /** General room state, as described by above enum. */
   public state!: RoomState;
 
