@@ -8,6 +8,17 @@ export enum RoomState {
   ROUNDEND = 'round_end',
 }
 
+const randomCode = () => {
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+  for (let i = 0; i < 6; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+
+  return text;
+};
+
 /**
  * A room's complete state is, additionally, represented by its
  * players, leader, and the collection of rounds.
@@ -15,6 +26,22 @@ export enum RoomState {
 export default class Room {
   /** Holds all rooms; map of code to Room object. */
   public static rooms: Map<string, Room> = new Map();
+
+  /** Creates a room and stores it in the application state. */
+  public static createRoom(creator: Player) {
+    const room = new Room(creator);
+    this.rooms.set(room.code, room);
+    return room;
+  }
+
+  /** Generates a unique room code, 6-digit alphanumeric. */
+  public static generateUniqueCode() {
+    let code = randomCode();
+    while (Room.rooms.has(code)) {
+      code = randomCode();
+    }
+    return code;
+  }
 
   /** Unique code to join the room. */
   public code!: string;
@@ -30,4 +57,13 @@ export default class Room {
 
   /** The current game being played. */
   public game!: Game;
+
+  /** Constructs a new room. */
+  constructor(creator: Player) {
+    this.code = Room.generateUniqueCode();
+    this.state = RoomState.WAITING;
+    this.players = [creator];
+    this.leader = creator;
+    this.game = null;
+  }
 }

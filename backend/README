@@ -1,0 +1,56 @@
+# yikes backend documentation
+The yikes API is comprised of a RESTful service and a Socket.io service. 
+
+## REST API
+
+### POST `/username`
+Creates the player and sets the user's username.
+
+** Request **
+```
+body: { username: string }
+```
+
+** Response **
+204: Success
+409: User already has username
+422: Invalid inputs
+
+### POST `/create`
+Creates a new room, and places this user as a leader in this room.
+
+** Response **
+```
+{ code: string }
+```
+200: Success
+412: User does not exist (must call /username first)
+
+### POST `/join`
+Joins the user into the specified room
+
+** Request **
+```
+body: { code: string }
+```
+
+** Response **
+```
+{
+  code: string,
+  players: Player[]
+}
+```
+
+200: Success
+401: Incorrect room code (or, room is already in game)
+412: User does not exist (must call /username first)
+422: Invalid inputs
+
+### POST `/leave`
+
+### POST `/start`
+
+### POST `/play-card`
+
+### POST `/select-winner`

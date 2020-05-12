@@ -5,6 +5,15 @@ export default class Player {
   /** Holds all players; map of id to Player object. */
   public static players: Map<string, Player> = new Map();
 
+  public static getPlayer(id: string) {
+    return this.players.get(id);
+  }
+
+  /** Creates a player and stores it in the application state. */
+  public static createPlayer(id: string, username: string) {
+    this.players.set(id, new Player(id, username));
+  }
+
   /** Each user is given a unique ID. */
   public id!: string;
 
