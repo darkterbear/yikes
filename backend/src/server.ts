@@ -57,7 +57,7 @@ route(app);
 const server = http.createServer(app);
 
 /* SOCKET.IO */
-socket(server, sessionMiddleware);
+export const sio = socket(server, sessionMiddleware);
 
 /* BIND SERVICE TO PORT */
 if (process.env.NODE_ENV !== Environment.Test) {

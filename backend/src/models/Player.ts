@@ -1,3 +1,4 @@
+import { Socket } from 'socket.io';
 import Room from './Room';
 
 /** Player represents a single user. */
@@ -26,10 +27,14 @@ export default class Player {
   /** Room of this player. */
   public room: Room;
 
+  /** This player's socket connection. */
+  public socket: Socket;
+
   constructor(id: string, username: string) {
     this.id = id;
     this.username = username;
     this.score = 0;
     this.room = null;
+    this.socket = null;
   }
 }

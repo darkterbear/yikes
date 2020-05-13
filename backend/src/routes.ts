@@ -10,4 +10,10 @@ export default (app: IRouter) => {
     controller.setUsername);
 
   app.post('/create', middleware.userExists, controller.create);
+
+  app.post('/join',
+    middleware.userExists,
+    validators.validateJoin,
+    middleware.validateInput,
+    controller.joinRoom);
 };

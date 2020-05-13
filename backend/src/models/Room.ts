@@ -8,11 +8,13 @@ export enum RoomState {
   ROUNDEND = 'round_end',
 }
 
+export const CODE_LENGTH = Number(process.env.CODE_LENGTH);
+
 const randomCode = () => {
   let text = '';
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < CODE_LENGTH; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }
 
@@ -26,6 +28,10 @@ const randomCode = () => {
 export default class Room {
   /** Holds all rooms; map of code to Room object. */
   public static rooms: Map<string, Room> = new Map();
+
+  public static getRoom(code: string) {
+    return this.rooms.get(code);
+  }
 
   /** Creates a room and stores it in the application state. */
   public static createRoom(creator: Player) {

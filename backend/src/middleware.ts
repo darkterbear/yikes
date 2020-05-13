@@ -8,7 +8,7 @@ export const userExists = async (
   next: NextFunction,
 ) => {
   const player = Player.getPlayer(req.sessionID);
-  if (player) {
+  if (player && player.socket) {
     req.player = player;
     next();
   } else {
