@@ -12,7 +12,11 @@ body: { username: string }
 ```
 
 ** Response **
-204: Success
+```
+body: Player
+```
+
+200: Success
 409: User already has username
 422: Invalid inputs
 
@@ -38,7 +42,8 @@ body: { code: string }
 ```
 {
   code: string,
-  players: Player[]
+  players: Player[],
+  leader: Player
 }
 ```
 

@@ -9,17 +9,20 @@ export const setUsername = (req: Request, res: Response) => {
   const player = Player.getPlayer(req.sessionID);
 
   if (player) {
-    return res.status(409).end();
-  } else {
-    Player.createPlayer(req.sessionID, username);
+    // Existing player is setting username; destroy the existing player, leave the room this player is in, etc.
+    Player.disconnectPlayer(player.id);
   }
 
-  res.status(204).end();
+  res.status(200).json(Player.createPlayer(req.sessionID, username));
 };
 
 /** Handles room creation. */
 export const create = (req: Request, res: Response) => {
   const room = Room.createRoom(req.player);
+
+  // Join this player into the socket room.
+  req.player.socket.join(room.code);
+
   res.status(200).json({ code: room.code });
 };
 
@@ -33,10 +36,12 @@ export const joinRoom = (req: Request, res: Response) => {
   }
 
   room.players.push(req.player);
-  res.status(200).json({ code: room.code, players: room.players });
+  res.status(200).json({
+    code: room.code, players: room.players.map((p) => p.toShortPlayer()), leader: room.leader.toShortPlayer(),
+  });
 
   // Socket.io notify the other players in this room about this join.
-  sio.to(room.code).emit('new-player', req.player.username);
+  sio.to(room.code).emit('new-player', req.player.toShortPlayer());
 
   // Join this player into the socket room.
   req.player.socket.join(room.code);

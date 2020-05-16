@@ -12,7 +12,37 @@ export default class Player {
 
   /** Creates a player and stores it in the application state. */
   public static createPlayer(id: string, username: string) {
-    this.players.set(id, new Player(id, username));
+    const player = new Player(id, username);
+    this.players.set(id, player);
+    return player;
+  }
+
+  public static destroyPlayer(id: string) {
+    const player = this.getPlayer(id);
+    if (player.socket) {
+      player.socket.disconnect(true);
+    }
+    this.players.delete(id);
+  }
+
+  public static disconnectPlayer(id: string) {
+    const player = this.getPlayer(id);
+    const room = player.room;
+    if (room) {
+      // Remove player from room
+      room.players.splice(room.players.indexOf(player), 1);
+      // Handle room
+      if (room.leader === player) {
+        if (room.players.length < 1) {
+          Room.destroyRoom(room.code);
+        } else {
+          room.leader = room.players[0];
+        }
+      }
+    }
+
+    // Delete this player
+    Player.destroyPlayer(id);
   }
 
   /** Each user is given a unique ID. */
@@ -36,5 +66,12 @@ export default class Player {
     this.score = 0;
     this.room = null;
     this.socket = null;
+  }
+
+  public toShortPlayer() {
+    return {
+      id: this.id,
+      username: this.username,
+    };
   }
 }

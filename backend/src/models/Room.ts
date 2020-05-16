@@ -37,7 +37,12 @@ export default class Room {
   public static createRoom(creator: Player) {
     const room = new Room(creator);
     this.rooms.set(room.code, room);
+    creator.room = room;
     return room;
+  }
+
+  public static destroyRoom(code: string) {
+    this.rooms.delete(code);
   }
 
   /** Generates a unique room code, 6-digit alphanumeric. */
