@@ -1,7 +1,45 @@
+@import './colors.scss';
+@import './type.scss';
+
 html, body, #root {
   width: 100%;
   height: 100vh;
   margin: 0;
+}
+
+button {
+  color: $red;
+  background: white;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: white;
+  opacity: 0.6;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: white;
+}
+
+input {
+  background: none;
+  border: none;
+  font-size: 18px;
+  border-bottom: 2px solid white;
+  margin: 0.5rem 0;
+  color: white;
+  width: 240px;
+}
+
+.content {
+  width: 80%;
+  max-width: 1200px;
 }
 
 #home-page {
@@ -11,4 +49,18 @@ html, body, #root {
   align-items: center;
 
   height: 100%;
+
+  background: $red;
+  color: white;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+      text-align: center;
+    }
+  }
 }

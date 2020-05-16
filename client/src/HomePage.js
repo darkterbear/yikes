@@ -64,12 +64,12 @@ export default class HomePage extends React.Component {
   render() {
     return (
       <div id="home-page" className="page">
-        <h1>Welcome to YIKES!</h1>
-        <p>What's your name?</p>
-        <input placeholder="Username" value={this.state.username} onChange={this.handleUsernameChange} />
-        <input placeholder="Room Code" value={this.state.code} onChange={this.handleCodeChange} />
-        <h5>Leave room code empty for new room!</h5>
-        <button onClick={this.handleStart}>Let's go!</button>
+        <div className="content">
+          <h1>the only appropriate response to the dates your friends set you up on.</h1>
+          <input placeholder="Username" value={this.state.username} onChange={this.handleUsernameChange} />
+          <input placeholder="Room Code (if joining game)" value={this.state.code} onChange={this.handleCodeChange} />
+          <button onClick={this.handleStart}>Let's go!</button>
+        </div>
       </div>
     );
   }
