@@ -14,10 +14,17 @@
 h1 {
   font-size: 24px;
   font-weight: bold;
+  margin: 0;
 }
 
 p {
   font-size: 18px;
+  margin: 0;
+}
+
+ul {
+  font-size: 18px;
+  margin: 0;
 }
 
 html, body, #root {
@@ -80,6 +87,66 @@ input {
 }
 #home-page .content h1 {
   text-align: center;
+  margin: 2rem 0;
+}
+#home-page .content #device-notice {
+  display: none;
+  text-align: center;
+  margin: 1rem 0;
+}
+@media only screen and (max-width: 900px) {
+  #home-page .content #device-notice {
+    display: inline;
+  }
+}
+
+#lobby-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background: #F66D65;
+  color: white;
+}
+#lobby-page .content {
+  max-width: 1300px;
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+#lobby-page .content #players {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+#lobby-page .content #players .player {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 1rem 1rem;
+  width: 128px;
+  border-bottom: 2px solid white;
+}
+#lobby-page .content #players .player p {
+  margin: 0;
+}
+#lobby-page .content #room-code {
+  font-size: 2rem;
+  background: white;
+  color: #F66D65;
+  display: inline;
+  padding: 1rem;
+  align-self: center;
+  margin: 1rem 0 2rem;
+}
+#lobby-page .content #rules {
+  font-size: 16px;
 }
 
 /*# sourceMappingURL=index.css.map */

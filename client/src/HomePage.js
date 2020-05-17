@@ -43,9 +43,12 @@ export default class HomePage extends React.Component {
         this.props.history.push({
           pathname: '/lobby',
           state: {
-            players: [player],
-            leader: player,
-            code: (await createRes.json()).code
+            room: {
+              players: [player],
+              leader: player,
+              code: (await createRes.json()).code
+            },
+            player
           }
         })
       }
@@ -55,7 +58,10 @@ export default class HomePage extends React.Component {
       if (joinRes.status === 200) {
         this.props.history.push({
           pathname: '/lobby',
-          state: await joinRes.json()
+          state: {
+            room: await joinRes.json(),
+            player
+          }
         })
       }
     }
@@ -65,7 +71,9 @@ export default class HomePage extends React.Component {
     return (
       <div id="home-page" className="page">
         <div className="content">
+          <img src="https://files.terranceli.com/yikes/yikes.svg" />
           <h1>the only appropriate response to the dates your friends set you up on.</h1>
+          <p id="device-notice">For the best experience, play on a larger device :)</p>
           <input placeholder="Username" value={this.state.username} onChange={this.handleUsernameChange} />
           <input placeholder="Room Code (if joining game)" value={this.state.code} onChange={this.handleCodeChange} />
           <button onClick={this.handleStart}>Let's go!</button>

@@ -61,6 +61,78 @@ input {
 
     h1 {
       text-align: center;
+      margin: 2rem 0;
+    }
+
+    #device-notice {
+      display: none;
+      text-align: center;
+      margin: 1rem 0;
+
+      @media only screen and (max-width: 900px) {
+        display: inline;
+      }
+    }
+  }
+}
+
+#lobby-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+
+  background: $red;
+  color: white;
+
+  .content {
+    max-width: 1300px;
+    padding: 4rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+
+    #players {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+  
+      .player {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+  
+        margin: 1rem 1rem;
+  
+        width: 128px;
+        border-bottom: 2px solid white;
+  
+        p {
+          margin: 0;
+        }
+      }
+    }
+
+    #room-code {
+      font-size: 2rem;
+      background: white;
+      color: $red;
+      display: inline;
+      padding: 1rem;
+      align-self: center;
+
+      margin: 1rem 0 2rem;
+    }
+
+    #rules {
+      font-size: 16px;
     }
   }
 }

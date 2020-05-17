@@ -12,7 +12,7 @@ export const CODE_LENGTH = Number(process.env.CODE_LENGTH);
 
 const randomCode = () => {
   let text = '';
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const possible = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 
   for (let i = 0; i < CODE_LENGTH; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
