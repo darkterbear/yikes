@@ -17,7 +17,6 @@ body: Player
 ```
 
 200: Success
-409: User already has username
 422: Invalid inputs
 
 ### POST `/create`
@@ -59,3 +58,18 @@ body: { code: string }
 ### POST `/play-card`
 
 ### POST `/select-winner`
+
+
+## SOCKET.IO API
+
+### new-player
+Emitted to lobby members when a new player joins the lobby
+
+** Payload **
+```
+{
+  id: string,
+  username: string
+}
+```
+
