@@ -1,5 +1,5 @@
-import Game from './Game';
 import Player from './Player';
+import Round from './Round';
 
 /** Rooms can be in several different states, represented below. */
 export enum RoomState {
@@ -67,7 +67,7 @@ export default class Room {
   public leader!: Player;
 
   /** The current game being played. */
-  public game!: Game;
+  public round!: Round;
 
   /** Constructs a new room. */
   constructor(creator: Player) {
@@ -75,6 +75,6 @@ export default class Room {
     this.state = RoomState.WAITING;
     this.players = [creator];
     this.leader = creator;
-    this.game = null;
+    this.round = null;
   }
 }

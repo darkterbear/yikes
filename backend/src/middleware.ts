@@ -16,6 +16,30 @@ export const userExists = async (
   }
 };
 
+export const inRoom = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (req.player.room) {
+    next();
+  } else {
+    res.status(412).end();
+  }
+};
+
+export const isLeader = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (req.player.room.leader.id === req.player.id) {
+    next();
+  } else {
+    res.status(401).end();
+  }
+};
+
 export const validateInput = async (
   req: Request,
   res: Response,

@@ -11,4 +11,9 @@ export default class Turn {
 
   /** The type of card they must play. */
   public type!: CardType;
+
+  constructor(player: Player, type: CardType) {
+    this.player = player;
+    this.type = type;
+  }
 }

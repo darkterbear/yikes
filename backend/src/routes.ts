@@ -4,6 +4,7 @@ import * as middleware from './middleware';
 import * as validators from './validators';
 
 export default (app: IRouter) => {
+
   app.post('/username',
     validators.validateUsername,
     middleware.validateInput,
@@ -16,4 +17,10 @@ export default (app: IRouter) => {
     validators.validateJoin,
     middleware.validateInput,
     controller.joinRoom);
+
+  app.post('/start',
+    middleware.userExists,
+    middleware.inRoom,
+    middleware.isLeader,
+    controller.startGame);
 };

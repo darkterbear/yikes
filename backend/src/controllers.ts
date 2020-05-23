@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Player from './models/Player';
 import Room, { RoomState } from './models/Room';
+import Round from './models/Round';
 import { sio } from './server';
 
 /** Sets the user's username. */
@@ -45,4 +46,21 @@ export const joinRoom = (req: Request, res: Response) => {
 
   // Join this player into the socket room.
   req.player.socket.join(room.code);
+};
+
+export const startGame = (req: Request, res: Response) => {
+  const room = req.player.room;
+
+  room.state = RoomState.INGAME;
+  room.round = new Round(room);
+
+  for (const player of room.players) {
+    player.socket.emit('round-started', {
+      single: room.round.single,
+      turn: room.round.turn,
+      playedCards: room.round.playedCards,
+      likesHand: room.round.likesHands.get(player.id),
+      yikesHand: room.round.yikesHands.get(player.id),
+    });
+  }
 };

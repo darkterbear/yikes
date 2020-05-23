@@ -51,9 +51,13 @@ body: { code: string }
 412: User does not exist (must call /username first)
 422: Invalid inputs
 
-### POST `/leave`
-
 ### POST `/start`
+Called by the lobby leader to start the game
+
+** Response **
+204: Success
+412: Prereqs not met (user must exst, must be in room)
+401: Not leader
 
 ### POST `/play-card`
 
@@ -73,3 +77,28 @@ Emitted to lobby members when a new player joins the lobby
 }
 ```
 
+### player-left
+Emitted to lobby members when a player leaves; also includes new leader information if the leader leaves
+
+### round-started
+Emitted when a game round has started
+
+** Payload **
+```
+{
+  single: string (representing id of the single),
+  turn: Turn
+  playedCards: Map<string, Card[]>,
+  likesHand: Card[],
+  yikesHand: Card[]
+}
+```
+
+### update-hand
+Emitted to a player when they receive a new hand
+
+### game-update
+Emitted to a room when game state changes (e.g. a player plays a card)
+
+### round-recap
+Emitted to lobby members at the end of a round
