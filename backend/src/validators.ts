@@ -18,3 +18,19 @@ export const validateJoin = [
     .isAlphanumeric()
     .isLength({ min: CODE_LENGTH, max: CODE_LENGTH }),
 ];
+
+export const validatePlayCard = [
+  body('index', 'missing or invalid card index')
+    .exists()
+    .trim()
+    .isArray()
+    .custom((arr) => {
+      // Checks if all entries are numeric
+      for (const i of arr) {
+        if (isNaN(i)) {
+          return false;
+        }
+      }
+      return true;
+    }),
+];

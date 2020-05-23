@@ -14,7 +14,7 @@ export default class Round {
   public room!: Room;
 
   /** The id of the player that is the judge or "single" for this turn. */
-  public single!: string;
+  public singleId!: string;
 
   /** Represents who's turn it is and what type of card they must play. */
   public turn!: Turn;
@@ -36,7 +36,7 @@ export default class Round {
 
   constructor(room: Room) {
     this.room = room;
-    this.single = room.players[0].id;
+    this.singleId = room.players[0].id;
     this.turn = new Turn(room.players[1], CardType.Likes);
     this.playedCards = new Map<string, Card[]>();
     this.likesHands = new Map<string, Card[]>();

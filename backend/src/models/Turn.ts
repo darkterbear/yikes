@@ -9,8 +9,8 @@ export default class Turn {
   /** Player whose turn it is. */
   public player!: Player;
 
-  /** The type of card they must play. */
-  public type!: CardType;
+  /** The type of card they must play. Null for single choosing. */
+  public type: CardType;
 
   constructor(player: Player, type: CardType) {
     this.player = player;

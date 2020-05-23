@@ -23,4 +23,11 @@ export default (app: IRouter) => {
     middleware.inRoom,
     middleware.isLeader,
     controller.startGame);
+
+  app.post('/play-card',
+    middleware.userExists,
+    middleware.inRoom,
+    validators.validatePlayCard,
+    middleware.validateInput,
+    controller.playCard);
 };
