@@ -75,12 +75,28 @@ body
 ** Response **
 204: Success
 400: Incorrect number of cards
+401: Not in game
 403: Not your turn (or not correct type of turn; single selecting winner must use /select-winner)
 404: Card index not in bounds
 412: Prereqs not met (user must exist, must be in room)
 
 ### POST `/select-winner`
+Called by the single to choose a winning date.
 
+** Request **
+body
+```
+{
+  id: string (id of the player that wins)
+}
+```
+
+** Response **
+204: Success
+401: Not in game
+403: Not your turn (or you're not the single)
+404: Player not found
+412: Prereqs not met (user must exist, must be in room)
 
 ## SOCKET.IO API
 
@@ -104,7 +120,7 @@ Emitted when a game round has started
 ** Payload **
 ```
 {
-  single: string (representing id of the single),
+  singleId: string (representing id of the single),
   turn: Turn
   playedCards: Map<string, Card[]>,
   likesHand: Card[],
@@ -115,16 +131,26 @@ Emitted when a game round has started
 ### update-hand
 Emitted to a player when they receive a new hand
 
+** Payload **
+```
+{
+  likesHand: Card[],
+  yikesHand: Card[]
+}
+```
+
 ### game-update
 Emitted to a room when game state changes (e.g. a player plays a card)
 
 ** Payload **
 ```
 {
-  turn: Turn
-  playedCards: Map<string, Card[]>
+  singleId: string,
+  turn: Turn,
+  playedCards: Map<string, Card[]>,
+  scores: [{
+    id: string,
+    score: number
+  }]
 }
 ```
-
-### round-recap
-Emitted to lobby members at the end of a round

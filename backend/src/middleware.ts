@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import Player from './models/Player';
+import { RoomState } from './models/Room';
 
 export const userExists = async (
   req: Request,
@@ -34,6 +35,18 @@ export const isLeader = async (
   next: NextFunction,
 ) => {
   if (req.player.room.leader.id === req.player.id) {
+    next();
+  } else {
+    res.status(401).end();
+  }
+};
+
+export const inGame = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (req.player.room.state === RoomState.INGAME) {
     next();
   } else {
     res.status(401).end();

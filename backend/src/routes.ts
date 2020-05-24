@@ -27,7 +27,17 @@ export default (app: IRouter) => {
   app.post('/play-card',
     middleware.userExists,
     middleware.inRoom,
+    middleware.inGame,
     validators.validatePlayCard,
     middleware.validateInput,
     controller.playCard);
+
+  app.post('select-winner',
+    middleware.userExists,
+    middleware.inRoom,
+    middleware.inGame,
+    validators.validateSelectWinner,
+    middleware.validateInput,
+    controller.selectWinner,
+  );
 };

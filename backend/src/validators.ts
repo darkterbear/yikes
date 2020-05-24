@@ -34,3 +34,10 @@ export const validatePlayCard = [
       return true;
     }),
 ];
+
+export const validateSelectWinner = [
+  body('id', 'missing or invalid id')
+    .exists()
+    .trim()
+    .isString(),
+];

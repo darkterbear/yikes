@@ -65,7 +65,7 @@ export const startGame = (req: Request, res: Response) => {
 
   for (const player of room.players) {
     player.socket.emit('round-started', {
-      single: room.round.singleId,
+      singleId: room.round.singleId,
       turn: room.round.turn,
       playedCards: room.round.playedCards,
       likesHand: room.round.likesHands.get(player.id),
@@ -129,7 +129,61 @@ export const playCard = (req: Request, res: Response) => {
 
   // Emit to room
   sio.to(room.code).emit('game-update', {
+    singleId: room.round.singleId,
     turn: room.round.turn,
     playedCards: room.round.playedCards,
+    scores: room.players.map((p) => ({
+      id: p.id,
+      score: p.score,
+    })),
   });
+};
+
+export const selectWinner = (req: Request, res: Response) => {
+  const room = req.player.room;
+  const round = room.round;
+  const turn = round.turn;
+  const { id } = req.body;
+
+  // Check that it is the user's turn, which must be null
+  if (turn.player.id !== req.player.id || turn.type !== null) {
+    return res.status(403).end();
+  }
+
+  const targets = room.players.filter((p) => p.id === id);
+  if (targets.length < 1) {
+    return res.status(404).end();
+  }
+
+  // Update turn, playedCards, score
+  const winner = targets[0];
+  winner.score++;
+  round.playedCards = new Map();
+
+  const playerIndex = room.players.indexOf(req.player);
+  const nextSingleIndex = (playerIndex + 1) % room.players.length;
+  round.singleId = room.players[nextSingleIndex].id;
+  turn.type = CardType.Likes;
+  turn.player = room.players[(nextSingleIndex + 1) % room.players.length];
+
+  sio.to(room.code).emit('game-update', {
+    singleId: round.singleId,
+    turn,
+    playedCards: round.playedCards,
+    scores: room.players.map((p) => ({
+      id: p.id,
+      score: p.score,
+    })),
+  });
+
+  // Update hands
+  // TODO: define behavior for when not enough cards left in deck to deal
+  round.dealCards();
+
+  for (const player of room.players) {
+    player.socket.emit('update-hand', {
+      likesHand: room.round.likesHands.get(player.id),
+      yikesHand: room.round.yikesHands.get(player.id),
+    });
+  }
 };
