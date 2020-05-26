@@ -46,3 +46,13 @@ export const createRoom = () => {
     credentials: 'include'
   })
 }
+
+export const startGame = () => {
+  return fetch(BASE_URL + '/start', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include'
+  })
+}

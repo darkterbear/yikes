@@ -64,14 +64,19 @@ export const startGame = (req: Request, res: Response) => {
   room.round = new Round(room);
 
   for (const player of room.players) {
-    player.socket.emit('round-started', {
+    player.socket.emit('start-game', {
       singleId: room.round.singleId,
-      turn: room.round.turn,
+      turn: {
+        type: room.round.turn.type,
+        player: room.round.turn.player.toShortPlayer(),
+      },
       playedCards: room.round.playedCards,
       likesHand: room.round.likesHands.get(player.id),
       yikesHand: room.round.yikesHands.get(player.id),
     });
   }
+
+  res.status(204).end();
 };
 
 export const playCard = (req: Request, res: Response) => {
@@ -137,6 +142,8 @@ export const playCard = (req: Request, res: Response) => {
       score: p.score,
     })),
   });
+
+  res.status(204).end();
 };
 
 export const selectWinner = (req: Request, res: Response) => {
@@ -186,4 +193,6 @@ export const selectWinner = (req: Request, res: Response) => {
       yikesHand: room.round.yikesHands.get(player.id),
     });
   }
+
+  res.status(204).end();
 };

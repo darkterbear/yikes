@@ -114,8 +114,8 @@ Emitted to lobby members when a new player joins the lobby
 ### player-left
 Emitted to lobby members when a player leaves; also includes new leader information if the leader leaves
 
-### round-started
-Emitted when a game round has started
+### start-game
+Emitted when a lobby goes in-game
 
 ** Payload **
 ```

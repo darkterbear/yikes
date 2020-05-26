@@ -17,6 +17,7 @@ export default (server: Server, sessionMiddleware: any) => {
 
   sio.sockets.on('connection', (socket) => {
     const player = Player.getPlayer(socket.handshake.sessionID);
+    console.log(`Player ${player.id} attempting to connect`);
 
     if (!player) {
       // Player does not yet exist; must call /username before connecting to socket
@@ -24,9 +25,11 @@ export default (server: Server, sessionMiddleware: any) => {
     }
 
     player.socket = socket;
+    console.log(`Player ${player.id} connected`);
 
     socket.on('disconnect', () => {
       player.socket = null;
+      console.log(`Player ${player.id} disconnected`);
     });
   });
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { socket } from './api';
+import { socket, startGame } from './api';
 
 export default class LobbyPage extends React.Component {
 
@@ -13,6 +13,26 @@ export default class LobbyPage extends React.Component {
     socket.on('new-player', player => {
       this.setState({ room: { ...this.state.room, players: [...this.state.room.players, player] } })
     })
+
+    socket.on('start-game', game => {
+      this.props.history.push({
+        pathname: '/game',
+        state: {
+          player: this.state.player,
+          players: this.state.players,
+          ...game
+        }
+      })
+    })
+  }
+
+  componentWillUnmount() {
+    socket.on('new-player', () => { })
+    socket.on('start-game', () => { })
+  }
+
+  handleStartGame = async () => {
+    await startGame()
   }
 
   render() {
@@ -41,7 +61,7 @@ export default class LobbyPage extends React.Component {
             <li>The Single™️ picks their date among the candidates; the player who created that date wins a point!</li>
           </ul>
           {this.state.player.id === this.state.room.leader.id &&
-            <button>Start Game</button>
+            <button onClick={this.handleStartGame}>Start Game</button>
           }
         </div>
       </div>
