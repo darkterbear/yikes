@@ -191,6 +191,10 @@ input {
     h3 {
       text-align: center;
     }
+
+    .turn {
+      border: 2px solid $red;
+    }
   }
 
   .card {

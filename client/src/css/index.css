@@ -195,6 +195,9 @@ input {
 #game-page .player h3 {
   text-align: center;
 }
+#game-page .player .turn {
+  border: 2px solid #F66D65;
+}
 #game-page .card {
   width: 84px;
   height: 128px;

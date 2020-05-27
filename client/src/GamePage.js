@@ -119,8 +119,8 @@ class Player extends React.Component {
     return (
       <div className={`player ${this.props.isTurn ? 'turn' : ''}`}>
         {this.props.isSingle ?
-          <h1>Single™️</h1> :
-          <div className="card-container">
+          <h1 className={this.props.isTurn ? 'turn' : ''}>Single™️</h1> :
+          <div className={`card-container ${this.props.isTurn ? 'turn' : ''}`}>
             {this.props.likes.map(likeCard => <Card card={likeCard} yikes={false} />)}
             <Card card={this.props.yikes} yikes={true} />
           </div>
