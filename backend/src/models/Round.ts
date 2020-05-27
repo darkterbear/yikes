@@ -70,7 +70,7 @@ export default class Round {
         yikesHand = this.yikesHands.get(player.id);
       }
 
-      while (yikesHand.length < 4) {
+      while (yikesHand.length < 3) {
         yikesHand.push(Card.draw(this.yikesDeck));
       }
 

@@ -15,11 +15,12 @@ export default class LobbyPage extends React.Component {
     })
 
     socket.on('start-game', game => {
+      console.log(game)
       this.props.history.push({
         pathname: '/game',
         state: {
           player: this.state.player,
-          players: this.state.players,
+          players: this.state.room.players,
           ...game
         }
       })
@@ -44,9 +45,9 @@ export default class LobbyPage extends React.Component {
             {
               [0, 1, 2, 3, 4, 5, 6, 7].map(i => {
                 if (i < this.state.room.players.length) {
-                  return <div className="player"><p>{this.state.room.players[i].username}</p></div>
+                  return <div className="player" key={this.state.room.players[i].id}><p>{this.state.room.players[i].username}</p></div>
                 } else {
-                  return <div className="player"><p>&nbsp;</p></div>
+                  return <div className="player" key={i}><p>&nbsp;</p></div>
                 }
               })
             }

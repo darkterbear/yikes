@@ -4,8 +4,8 @@ import { socket } from './api';
 export default class GamePage extends React.Component {
 
   getPlayedLikes = (playerId) => {
-    const cards = this.state.game.playedCards.get(playerId)
-    if (cards.length === 0) {
+    const cards = this.state.playedCards[playerId]
+    if (!cards || cards.length === 0) {
       return [null, null] // TODO: use env vars to make this more flexible
     } else if (cards.length === 3) {
       return cards.slice(0, 2)
@@ -22,9 +22,9 @@ export default class GamePage extends React.Component {
     }
 
     const leftPlayerId = this.state.players[index].id
-    const cards = this.state.game.playedCards.get(leftPlayerId)
+    const cards = this.state.playedCards[leftPlayerId]
 
-    if (cards.length === 3) {
+    if (cards && cards.length === 3) {
       return cards[2]
     }
 
@@ -39,15 +39,19 @@ export default class GamePage extends React.Component {
      * state: {
      *    player: Player,
      *    players: Player[],
-     *    game: {
-     *      singleId: string (id),
-     *      turn: Turn,
-     *      playedCards: Map<string (id), Card[]>,
-     *      likesHand: Card[],
-     *      yikesHand: Card[]
-     *    }
+     *    singleId: string (id),
+     *    turn: Turn,
+     *    playedCards: Map<string (id), Card[]>,
+     *    likesHand: Card[],
+     *    yikesHand: Card[]
      * }
      */
+  }
+
+  componentDidMount() {
+    // socket.on('new-player', player => {
+    //   this.setState({ room: { ...this.state.room, players: [...this.state.room.players, player] } })
+    // })
 
     // Reorder state.players based on this player's position
     let index = 0;
@@ -57,12 +61,6 @@ export default class GamePage extends React.Component {
     })
   }
 
-  componentDidMount() {
-    // socket.on('new-player', player => {
-    //   this.setState({ room: { ...this.state.room, players: [...this.state.room.players, player] } })
-    // })
-  }
-
   componentWillUnmount() {
     // socket.on('new-player', () => { })
   }
@@ -70,14 +68,39 @@ export default class GamePage extends React.Component {
   render() {
     return (
       <div id="game-page" className="page">
-        {this.state.players.map((p, i) =>
-          <Player
-            isSingle={p.id === this.state.game.singleId}
-            isTurn={p.id === this.state.game.turn.player.id}
-            likes={this.getPlayedLikes(p)}
-            yikes={this.getReceivedYikes(i)}
-          />
-        )}
+        <div className="left-players">
+          {this.state.players.slice(0, 2).map((p, i) =>
+            <Player
+              username={p.username}
+              isSingle={p.id === this.state.singleId}
+              isTurn={p.id === this.state.turn.player.id}
+              likes={this.getPlayedLikes(p)}
+              yikes={this.getReceivedYikes(i)}
+            />
+          )}
+        </div>
+        <div className="top-players">
+          {this.state.players.slice(2, 5).map((p, i) =>
+            <Player
+              username={p.username}
+              isSingle={p.id === this.state.singleId}
+              isTurn={p.id === this.state.turn.player.id}
+              likes={this.getPlayedLikes(p)}
+              yikes={this.getReceivedYikes(i + 2)}
+            />
+          )}
+        </div>
+        <div className="top-players">
+          {this.state.players.slice(5, 8).map((p, i) =>
+            <Player
+              username={p.username}
+              isSingle={p.id === this.state.singleId}
+              isTurn={p.id === this.state.turn.player.id}
+              likes={this.getPlayedLikes(p)}
+              yikes={this.getReceivedYikes(i + 5)}
+            />
+          )}
+        </div>
       </div>
     );
   }
@@ -97,11 +120,12 @@ class Player extends React.Component {
       <div className={`player ${this.props.isTurn ? 'turn' : ''}`}>
         {this.props.isSingle ?
           <h1>Single™️</h1> :
-          <div>
+          <div className="card-container">
             {this.props.likes.map(likeCard => <Card card={likeCard} yikes={false} />)}
             <Card card={this.props.yikes} yikes={true} />
           </div>
         }
+        <h3>{this.props.username}</h3>
       </div>
     );
   }
