@@ -93,7 +93,7 @@ input {
 
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
 
     #players {
@@ -142,7 +142,7 @@ input {
 
   .left-players {
     position: absolute;
-    left: 0;
+    left: 1rem;
     top: 50%;
     transform: translateY(-50%);
     
@@ -153,7 +153,7 @@ input {
   .top-players {
     position: absolute;
     left: 50%;
-    top: 0;
+    top: 1rem;
     transform: translateX(-50%);
     
     display: flex;
@@ -161,7 +161,7 @@ input {
 
   .right-players {
     position: absolute;
-    right: 0;
+    right: 1rem;
     top: 50%;
     transform: translateY(-50%);
     
@@ -169,17 +169,28 @@ input {
     flex-direction: column;
   }
 
+  .player-pane {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    h1 {
+      text-align: center;
+    }
+  }
+
+  .card-container {
+    padding: 1rem 0.5rem;
+    display: inline-flex;
+    border-radius: 4px;
+    border: 2px solid $lightgray;
+  }
+
   .player {
     display: inline-flex;
     flex-direction: column;
     height: 256px;
-
-    .card-container {
-      padding: 1rem 0.5rem;
-      display: inline-flex;
-      border-radius: 4px;
-      border: 2px solid $lightgray;
-    }
 
     h1 {
       text-align: center;
@@ -200,12 +211,19 @@ input {
   .card {
     width: 84px;
     height: 128px;
+    padding: 0.5rem;
     border-radius: 4px;
     border: 2px solid black;
     margin: 0 0.5rem;
+    font-size: 11px !important;
+    background: white;
 
     &.red {
       background: $red;
+    }
+
+    &:hover {
+      transform: scale(2);
     }
   }
 }

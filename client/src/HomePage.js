@@ -71,7 +71,7 @@ export default class HomePage extends React.Component {
     return (
       <div id="home-page" className="page">
         <div className="content">
-          <img src="https://files.terranceli.com/yikes/yikes.svg" />
+          <img alt="Yikes Logo" src="https://files.terranceli.com/yikes/yikes.svg" />
           <h1>the only appropriate response to the dates your friends set you up on.</h1>
           <p id="device-notice">For the best experience, play on a larger device :)</p>
           <input placeholder="Username" value={this.state.username} onChange={this.handleUsernameChange} />

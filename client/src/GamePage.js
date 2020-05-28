@@ -48,6 +48,28 @@ export default class GamePage extends React.Component {
      */
   }
 
+  isSingle = () => {
+    return this.state.singleId === this.state.player.id
+  }
+
+  isTurn = () => {
+    return this.state.turn.player.id === this.state.player.id
+  }
+
+  getSinglePlayer = () => {
+    return this.state.players.filter(p => p.id === this.state.singleId)[0]
+  }
+
+  getPlayableCards = () => {
+    if (!this.isTurn()) return []
+
+    if (this.state.turn.type === 'likes') {
+      return this.state.likesHand
+    } else {
+      return this.state.yikesHand
+    }
+  }
+
   componentDidMount() {
     // socket.on('new-player', player => {
     //   this.setState({ room: { ...this.state.room, players: [...this.state.room.players, player] } })
@@ -66,6 +88,7 @@ export default class GamePage extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <div id="game-page" className="page">
         <div className="left-players">
@@ -90,7 +113,7 @@ export default class GamePage extends React.Component {
             />
           )}
         </div>
-        <div className="top-players">
+        <div className="right-players">
           {this.state.players.slice(5, 8).map((p, i) =>
             <Player
               username={p.username}
@@ -100,6 +123,40 @@ export default class GamePage extends React.Component {
               yikes={this.getReceivedYikes(i + 5)}
             />
           )}
+        </div>
+        <div className="player-pane">
+          {/* Can be in one of a few states:
+              1. Player is single and it is their turn
+                Present a selection for which player wins
+              2. Player is single and it is not their turn
+                "You're the Single(TM)! It is _____'s turn"
+              3. Player is not single and it is their turn
+                Present a selection of cards to play
+              4. Player is not single and it is not their turn
+                "_____ is the Single(TM)! It is _____'s turn"
+            */}
+          {this.isSingle() && this.isTurn() &&
+            <div>
+              <h1>Choose who wins!</h1>
+              {this.state.players.map(p => <button>{p.username}</button>)}
+            </div>
+          }
+          {this.isSingle() && !this.isTurn() &&
+            <div>
+              <h1>You're the Single<span role="img" aria-label="TM">™️</span>! It's {this.state.turn.player.username}'s turn</h1>
+            </div>
+          }
+          {!this.isSingle() && this.isTurn() &&
+            <div>
+              <div className="card-container">{this.getPlayableCards().map(c => <Card card={c} type={c.type} />)}</div>
+              <h1>It's your turn!</h1>
+            </div>
+          }
+          {!this.isSingle() && !this.isTurn() &&
+            <div>
+              <h1>{this.getSinglePlayer().username} is the Single<span role="img" aria-label="TM">™️</span>! It's {this.state.turn.player.username}'s turn</h1>
+            </div>
+          }
         </div>
       </div>
     );
@@ -119,10 +176,10 @@ class Player extends React.Component {
     return (
       <div className={`player ${this.props.isTurn ? 'turn' : ''}`}>
         {this.props.isSingle ?
-          <h1 className={this.props.isTurn ? 'turn' : ''}>Single™️</h1> :
+          <h1 className={this.props.isTurn ? 'turn' : ''}>Single<span role="img" aria-label="TM">™️</span></h1> :
           <div className={`card-container ${this.props.isTurn ? 'turn' : ''}`}>
-            {this.props.likes.map(likeCard => <Card card={likeCard} yikes={false} />)}
-            <Card card={this.props.yikes} yikes={true} />
+            {this.props.likes.map(likeCard => <Card card={likeCard} type="likes" />)}
+            <Card card={this.props.yikes} type="yikes" />
           </div>
         }
         <h3>{this.props.username}</h3>
@@ -136,13 +193,21 @@ class Player extends React.Component {
  *    card: {
  *      text: string,
  *      filledText: string[]
- *    }
+ *    },
+ *    type: string
  * }
  */
 class Card extends React.Component {
   render() {
-    return <div className={`card ${this.props.yikes ? 'red' : ''}`}>
-      <p>{this.props.text}</p>
-    </div>
+    if (this.props.card) {
+      return <div className={`card ${this.props.card.type === 'yikes' ? 'red' : ''}`}>
+        <p style={{ fontSize: '11px' }}>{this.props.card.text}</p>
+      </div>
+    } else {
+      return <div className={`card ${this.props.type === 'yikes' ? 'red' : ''}`}>
+        <p></p>
+      </div>
+    }
+
   }
 }

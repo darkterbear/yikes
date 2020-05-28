@@ -114,7 +114,7 @@ input {
   padding: 4rem;
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
 }
 #lobby-page .content #players {
@@ -154,7 +154,7 @@ input {
 }
 #game-page .left-players {
   position: absolute;
-  left: 0;
+  left: 1rem;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
@@ -163,28 +163,37 @@ input {
 #game-page .top-players {
   position: absolute;
   left: 50%;
-  top: 0;
+  top: 1rem;
   transform: translateX(-50%);
   display: flex;
 }
 #game-page .right-players {
   position: absolute;
-  right: 0;
+  right: 1rem;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
 }
-#game-page .player {
-  display: inline-flex;
-  flex-direction: column;
-  height: 256px;
+#game-page .player-pane {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
 }
-#game-page .player .card-container {
+#game-page .player-pane h1 {
+  text-align: center;
+}
+#game-page .card-container {
   padding: 1rem 0.5rem;
   display: inline-flex;
   border-radius: 4px;
   border: 2px solid #C4C4C4;
+}
+#game-page .player {
+  display: inline-flex;
+  flex-direction: column;
+  height: 256px;
 }
 #game-page .player h1 {
   text-align: center;
@@ -201,12 +210,18 @@ input {
 #game-page .card {
   width: 84px;
   height: 128px;
+  padding: 0.5rem;
   border-radius: 4px;
   border: 2px solid black;
   margin: 0 0.5rem;
+  font-size: 11px !important;
+  background: white;
 }
 #game-page .card.red {
   background: #F66D65;
+}
+#game-page .card:hover {
+  transform: scale(2);
 }
 
 /*# sourceMappingURL=index.css.map */

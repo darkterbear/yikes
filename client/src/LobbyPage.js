@@ -57,9 +57,9 @@ export default class LobbyPage extends React.Component {
           <ul id="rules">
             <li>Hop onto a call with everyone to make it more fun!</li>
             <li>Each player will have a hand of <b>likes</b> and <b>yikes</b></li>
-            <li>Each round, one person will be Single™️ and everyone else tries to create the ideal date for them with 2 likes. </li>
-            <li>After the likes are played, each player (except the Single™️) sabotages the player on their right with a yikes! Know your audience! </li>
-            <li>The Single™️ picks their date among the candidates; the player who created that date wins a point!</li>
+            <li>Each round, one person will be Single<span role="img" aria-label="TM">™️</span> and everyone else tries to create the ideal date for them with 2 likes. </li>
+            <li>After the likes are played, each player (except the Single<span role="img" aria-label="TM">™️</span>) sabotages the player on their right with a yikes! Know your audience! </li>
+            <li>The Single<span role="img" aria-label="TM">™️</span> picks their date among the candidates; the player who created that date wins a point!</li>
           </ul>
           {this.state.player.id === this.state.room.leader.id &&
             <button onClick={this.handleStartGame}>Start Game</button>

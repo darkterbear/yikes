@@ -29,6 +29,7 @@ app.use(
   cors({
     origin: [
       'http://localhost:5000',
+      'http://192.168.0.109:5000',
       'https://yikes.terrance.com',
     ],
     credentials: true,
