@@ -96,6 +96,12 @@ export default class GamePage extends React.Component {
   componentDidMount() {
     socket.on('player-left', player => {
       // TODO:
+      this.props.history.push({
+        pathname: '/',
+        state: {
+          username: this.state.player.username
+        }
+      })
     })
 
     socket.on('game-update', ({ singleId, turn, playedCards, scores }) => {
