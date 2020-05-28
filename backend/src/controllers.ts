@@ -25,6 +25,8 @@ export const create = (req: Request, res: Response) => {
   // Join this player into the socket room.
   req.player.socket.join(room.code);
 
+  req.player.room = room;
+
   res.status(200).json({ code: room.code });
 };
 
@@ -42,6 +44,7 @@ export const joinRoom = (req: Request, res: Response) => {
   }
 
   room.players.push(req.player);
+  req.player.room = room;
   res.status(200).json({
     code: room.code, players: room.players.map((p) => p.toShortPlayer()), leader: room.leader.toShortPlayer(),
   });

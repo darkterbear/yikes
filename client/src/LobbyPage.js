@@ -14,6 +14,17 @@ export default class LobbyPage extends React.Component {
       this.setState({ room: { ...this.state.room, players: [...this.state.room.players, player] } })
     })
 
+    socket.on('player-left', ({ id, newLeader }) => {
+      console.log('received player-left')
+      this.setState({
+        room: {
+          ...this.state.room,
+          players: this.state.room.players.filter(p => p.id !== id),
+          leader: newLeader || this.state.room.leader
+        }
+      })
+    })
+
     socket.on('start-game', game => {
       console.log(game)
       this.props.history.push({
@@ -30,6 +41,7 @@ export default class LobbyPage extends React.Component {
   componentWillUnmount() {
     socket.on('new-player', () => { })
     socket.on('start-game', () => { })
+    socket.on('player-left', () => { })
   }
 
   handleStartGame = async () => {
