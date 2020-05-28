@@ -64,8 +64,8 @@ export default class Card {
 }
 
 // Load cards from card files
-const likesFile = process.env.CARDS_PATH + '/likes.txt';
-const yikesFile = process.env.CARDS_PATH + '/yikes.txt';
+const likesFile = './cards/likes.txt';
+const yikesFile = './cards/yikes.txt';
 
 const likesCardSet: Card[] = [];
 const yikesCardSet: Card[] = [];
