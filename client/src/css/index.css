@@ -220,6 +220,9 @@ input {
 #game-page .card.red {
   background: #F66D65;
 }
+#game-page .card.hidden {
+  visibility: hidden;
+}
 #game-page .card:hover {
   transform: scale(2);
 }

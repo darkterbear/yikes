@@ -222,6 +222,10 @@ input {
       background: $red;
     }
 
+    &.hidden {
+      visibility: hidden;
+    }
+
     &:hover {
       transform: scale(2);
     }

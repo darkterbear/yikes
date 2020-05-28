@@ -204,10 +204,9 @@ class Card extends React.Component {
         <p style={{ fontSize: '11px' }}>{this.props.card.text}</p>
       </div>
     } else {
-      return <div className={`card ${this.props.type === 'yikes' ? 'red' : ''}`}>
+      return <div className={`card hidden`}>
         <p></p>
       </div>
     }
-
   }
 }
