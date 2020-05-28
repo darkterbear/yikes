@@ -1,5 +1,5 @@
 import React from 'react';
-import { socket } from './api';
+import { socket, playCards } from './api';
 
 export default class GamePage extends React.Component {
 
@@ -11,30 +11,48 @@ export default class GamePage extends React.Component {
       return cards.slice(0, 2)
     }
 
+
     return cards
   }
 
   getReceivedYikes = (index) => {
-    // Get the playerId of the player before this index
-    index--
-    if (index < 0) {
-      index = this.state.players.length - 1
+    console.log('getting yikes of player at index' + index)
+    // Get the playerId of the player to the left of this index
+    index++
+
+    // If this player is the single, go back 1 more
+    if (index < this.state.players.length && this.state.players[index].id === this.state.singleId) {
+      index++
+    } else if (index === this.state.players.length && this.isSingle()) {
+      index = 0
     }
 
-    const leftPlayerId = this.state.players[index].id
+    let leftPlayerId
+    if (index === this.state.players.length) {
+      leftPlayerId = this.state.player.id
+    } else {
+      index = index % this.state.players.length
+      leftPlayerId = this.state.players[index].id
+    }
+
     const cards = this.state.playedCards[leftPlayerId]
 
     if (cards && cards.length === 3) {
+      console.log(cards[2])
       return cards[2]
     }
 
+    console.log(null)
     return null
   }
 
   constructor(props) {
     super(props)
 
-    this.state = props.location.state
+    this.state = {
+      ...props.location.state,
+      selectedCards: []
+    }
     /**
      * state: {
      *    player: Player,
@@ -43,7 +61,9 @@ export default class GamePage extends React.Component {
      *    turn: Turn,
      *    playedCards: Map<string (id), Card[]>,
      *    likesHand: Card[],
-     *    yikesHand: Card[]
+     *    yikesHand: Card[],
+     * 
+     *    selectedCards: number[] (representing indices of cards selected)
      * }
      */
   }
@@ -71,9 +91,18 @@ export default class GamePage extends React.Component {
   }
 
   componentDidMount() {
-    // socket.on('new-player', player => {
-    //   this.setState({ room: { ...this.state.room, players: [...this.state.room.players, player] } })
-    // })
+    socket.on('player-left', player => {
+      // TODO:
+    })
+
+    socket.on('game-update', ({ singleId, turn, playedCards, scores }) => {
+      // TODO: incorporate scores
+      this.setState({ singleId, turn, playedCards })
+    })
+
+    socket.on('update-hand', ({ likesHand, yikesHand }) => {
+      this.setState({ likesHand, yikesHand })
+    })
 
     // Reorder state.players based on this player's position
     let index = 0;
@@ -87,6 +116,25 @@ export default class GamePage extends React.Component {
     // socket.on('new-player', () => { })
   }
 
+  selectCard = (index) => {
+    if (this.isTurn() && !this.isSingle()) {
+      const currentlySelected = this.state.selectedCards.slice()
+      if (currentlySelected.includes(index)) {
+        currentlySelected.splice(currentlySelected.indexOf(index), 1)
+      } else {
+        currentlySelected.push(index)
+      }
+      this.setState({ selectedCards: currentlySelected })
+    }
+  }
+
+  handlePlayCards = async () => {
+    const res = await playCards(this.state.selectedCards)
+    if (res.status === 204) {
+      this.setState({ selectedCards: [] })
+    }
+  }
+
   render() {
     console.log(this.state)
     return (
@@ -97,7 +145,7 @@ export default class GamePage extends React.Component {
               username={p.username}
               isSingle={p.id === this.state.singleId}
               isTurn={p.id === this.state.turn.player.id}
-              likes={this.getPlayedLikes(p)}
+              likes={this.getPlayedLikes(p.id)}
               yikes={this.getReceivedYikes(i)}
             />
           )}
@@ -108,7 +156,7 @@ export default class GamePage extends React.Component {
               username={p.username}
               isSingle={p.id === this.state.singleId}
               isTurn={p.id === this.state.turn.player.id}
-              likes={this.getPlayedLikes(p)}
+              likes={this.getPlayedLikes(p.id)}
               yikes={this.getReceivedYikes(i + 2)}
             />
           )}
@@ -119,7 +167,7 @@ export default class GamePage extends React.Component {
               username={p.username}
               isSingle={p.id === this.state.singleId}
               isTurn={p.id === this.state.turn.player.id}
-              likes={this.getPlayedLikes(p)}
+              likes={this.getPlayedLikes(p.id)}
               yikes={this.getReceivedYikes(i + 5)}
             />
           )}
@@ -134,11 +182,12 @@ export default class GamePage extends React.Component {
                 Present a selection of cards to play
               4. Player is not single and it is not their turn
                 "_____ is the Single(TM)! It is _____'s turn"
+                TODO: show played cards
             */}
           {this.isSingle() && this.isTurn() &&
             <div>
               <h1>Choose who wins!</h1>
-              {this.state.players.map(p => <button>{p.username}</button>)}
+              <div className="winner-selection">{this.state.players.map(p => <button>{p.username}</button>)}</div>
             </div>
           }
           {this.isSingle() && !this.isTurn() &&
@@ -147,9 +196,9 @@ export default class GamePage extends React.Component {
             </div>
           }
           {!this.isSingle() && this.isTurn() &&
-            <div>
-              <div className="card-container">{this.getPlayableCards().map(c => <Card card={c} type={c.type} />)}</div>
-              <h1>It's your turn!</h1>
+            <div className="card-selection">
+              <div className="card-container">{this.getPlayableCards().map((c, i) => <Card selected={this.state.selectedCards.includes(i)} card={c} type={c.type} onClick={this.selectCard} index={i} />)}</div>
+              <button onClick={this.handlePlayCards}>Play Cards</button>
             </div>
           }
           {!this.isSingle() && !this.isTurn() &&
@@ -198,9 +247,18 @@ class Player extends React.Component {
  * }
  */
 class Card extends React.Component {
+
+  handleClick = () => {
+    if (this.props.onClick) {
+      this.props.onClick(this.props.index)
+    }
+  }
+
   render() {
     if (this.props.card) {
-      return <div className={`card ${this.props.card.type === 'yikes' ? 'red' : ''}`}>
+      return <div
+        className={`card ${this.props.card.type === 'yikes' ? 'red' : ''} ${this.props.selected ? 'selected' : ''}`}
+        onClick={this.handleClick}>
         <p style={{ fontSize: '11px' }}>{this.props.card.text}</p>
       </div>
     } else {

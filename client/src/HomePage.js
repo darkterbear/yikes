@@ -76,7 +76,7 @@ export default class HomePage extends React.Component {
           <p id="device-notice">For the best experience, play on a larger device :)</p>
           <input placeholder="Username" value={this.state.username} onChange={this.handleUsernameChange} />
           <input placeholder="Room Code (if joining game)" value={this.state.code} onChange={this.handleCodeChange} />
-          <button onClick={this.handleStart}>Let's go!</button>
+          <button className="light" onClick={this.handleStart}>Let's go!</button>
         </div>
       </div>
     );

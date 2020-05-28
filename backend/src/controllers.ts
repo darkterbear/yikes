@@ -112,7 +112,7 @@ export const playCard = (req: Request, res: Response) => {
   }
 
   // Place cards in playedCards, update hand and turn
-  const playerPlayedCards = round.playedCards.get(req.player.id);
+  const playerPlayedCards = round.playedCards[req.player.id];
   for (const index of indices) {
     // Splicing is okay since indices are sorted descending
     playerPlayedCards.push(hand.splice(index, 1)[0]);
@@ -125,7 +125,7 @@ export const playCard = (req: Request, res: Response) => {
   }
 
   // Check if the next player already played 2 likes 1 yikes
-  const nextPlayerPlayedCards = round.playedCards.get(room.players[nextPlayerIndex].id);
+  const nextPlayerPlayedCards = round.playedCards[room.players[nextPlayerIndex].id];
   if (nextPlayerPlayedCards.length === Card.likesPerPlayer + Card.yikesPerPlayer) {
     // Single's turn to pick
     turn.player = Player.getPlayer(round.singleId);
@@ -138,7 +138,10 @@ export const playCard = (req: Request, res: Response) => {
   // Emit to room
   sio.to(room.code).emit('game-update', {
     singleId: room.round.singleId,
-    turn: room.round.turn,
+    turn: {
+      type: room.round.turn.type,
+      player: room.round.turn.player.toShortPlayer(),
+    },
     playedCards: room.round.playedCards,
     scores: room.players.map((p) => ({
       id: p.id,
@@ -168,7 +171,9 @@ export const selectWinner = (req: Request, res: Response) => {
   // Update turn, playedCards, score
   const winner = targets[0];
   winner.score++;
-  round.playedCards = new Map();
+  for (const playerId in round.playedCards) {
+    round.playedCards[playerId] = [];
+  }
 
   const playerIndex = room.players.indexOf(req.player);
   const nextSingleIndex = (playerIndex + 1) % room.players.length;

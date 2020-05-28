@@ -29,6 +29,7 @@ export default class Player {
     const player = this.getPlayer(id);
     const room = player.room;
     if (room) {
+      // TODO: if room is in-game, <3 players means back to lobby
       // Remove player from room
       room.players.splice(room.players.indexOf(player), 1);
       // Handle room

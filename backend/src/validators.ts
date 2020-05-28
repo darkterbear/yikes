@@ -20,9 +20,8 @@ export const validateJoin = [
 ];
 
 export const validatePlayCard = [
-  body('index', 'missing or invalid card index')
+  body('indices', 'missing or invalid card index')
     .exists()
-    .trim()
     .isArray()
     .custom((arr) => {
       // Checks if all entries are numeric

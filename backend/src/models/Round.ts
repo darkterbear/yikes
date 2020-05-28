@@ -20,7 +20,7 @@ export default class Round {
   public turn!: Turn;
 
   /** The cards that are played by each player so far. */
-  public playedCards!: Map<string, Card[]>;
+  public playedCards!: { [key: string]: Card[] };
 
   /** The likes each player has (should be kept to only that player). */
   public likesHands!: Map<string, Card[]>;
@@ -38,11 +38,15 @@ export default class Round {
     this.room = room;
     this.singleId = room.players[0].id;
     this.turn = new Turn(room.players[1], CardType.Likes);
-    this.playedCards = new Map<string, Card[]>();
+    this.playedCards = {};
     this.likesHands = new Map<string, Card[]>();
     this.yikesHands = new Map<string, Card[]>();
     this.likesDeck = Card.newLikesDeck();
     this.yikesDeck = Card.newYikesDeck();
+
+    for (const player of room.players) {
+      this.playedCards[player.id] = [];
+    }
 
     Card.shuffle(this.likesDeck);
     Card.shuffle(this.yikesDeck);

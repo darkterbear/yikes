@@ -122,7 +122,7 @@ Emitted when a lobby goes in-game
 {
   singleId: string (representing id of the single),
   turn: Turn
-  playedCards: Map<string, Card[]>,
+  playedCards: { [key: string id]: Card[] },
   likesHand: Card[],
   yikesHand: Card[]
 }
@@ -147,7 +147,7 @@ Emitted to a room when game state changes (e.g. a player plays a card)
 {
   singleId: string,
   turn: Turn,
-  playedCards: Map<string, Card[]>,
+  playedCards: { [key: string id]: Card[] ,
   scores: [{
     id: string,
     score: number

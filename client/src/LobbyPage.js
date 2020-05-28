@@ -74,7 +74,7 @@ export default class LobbyPage extends React.Component {
             <li>The Single<span role="img" aria-label="TM">™️</span> picks their date among the candidates; the player who created that date wins a point!</li>
           </ul>
           {this.state.player.id === this.state.room.leader.id &&
-            <button onClick={this.handleStartGame}>Start Game</button>
+            <button className="light" onClick={this.handleStartGame}>Start Game</button>
           }
         </div>
       </div>

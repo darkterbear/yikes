@@ -56,3 +56,14 @@ export const startGame = () => {
     credentials: 'include'
   })
 }
+
+export const playCards = (indices) => {
+  return fetch(BASE_URL + '/play-card', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ indices }),
+    credentials: 'include'
+  })
+}

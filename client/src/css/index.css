@@ -34,14 +34,18 @@ html, body, #root {
 }
 
 button {
-  color: #F66D65;
-  background: white;
+  color: white;
+  background: #F66D65;
   font-weight: bold;
   font-size: 18px;
   border: none;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
   margin-top: 1rem;
+}
+button.light {
+  color: #F66D65;
+  background: white;
 }
 
 ::placeholder {
@@ -68,6 +72,10 @@ input {
 .content {
   width: 80%;
   max-width: 1200px;
+}
+
+.hidden {
+  visibility: hidden;
 }
 
 #home-page {
@@ -184,6 +192,17 @@ input {
 #game-page .player-pane h1 {
   text-align: center;
 }
+#game-page .player-pane .card-selection {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+#game-page .player-pane .winner-selection {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+}
 #game-page .card-container {
   padding: 1rem 0.5rem;
   display: inline-flex;
@@ -219,9 +238,10 @@ input {
 }
 #game-page .card.red {
   background: #F66D65;
+  color: white;
 }
-#game-page .card.hidden {
-  visibility: hidden;
+#game-page .card.selected {
+  box-shadow: 2px 6px 6px #F66D65;
 }
 #game-page .card:hover {
   transform: scale(2);
