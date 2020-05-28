@@ -17,8 +17,7 @@ export default class HomePage extends React.Component {
   }
 
   handleCodeChange = (e) => {
-    // TODO: uppercase only
-    this.setState({ code: e.target.value })
+    this.setState({ code: e.target.value.toUpperCase() })
   }
 
   handleStart = async () => {
