@@ -44,11 +44,16 @@ export default class GamePage extends React.Component {
     return null
   }
 
+  getScore = (id) => {
+    return this.state.scores.filter(s => s.id === id)[0].score
+  }
+
   constructor(props) {
     super(props)
 
     this.state = {
       ...props.location.state,
+      scores: props.location.state.players.map(p => ({ id: p.id, score: 0 })),
       selectedCards: []
     }
     /**
@@ -94,8 +99,7 @@ export default class GamePage extends React.Component {
     })
 
     socket.on('game-update', ({ singleId, turn, playedCards, scores }) => {
-      // TODO: incorporate scores
-      this.setState({ singleId, turn, playedCards })
+      this.setState({ singleId, turn, playedCards, scores })
     })
 
     socket.on('update-hand', ({ likesHand, yikesHand }) => {
@@ -144,6 +148,7 @@ export default class GamePage extends React.Component {
         <div className="left-players">
           {this.state.players.slice(0, 2).map((p, i) =>
             <Player
+              score={this.getScore(p.id)}
               username={p.username}
               isSingle={p.id === this.state.singleId}
               isTurn={p.id === this.state.turn.player.id}
@@ -155,6 +160,7 @@ export default class GamePage extends React.Component {
         <div className="top-players">
           {this.state.players.slice(2, 5).map((p, i) =>
             <Player
+              score={this.getScore(p.id)}
               username={p.username}
               isSingle={p.id === this.state.singleId}
               isTurn={p.id === this.state.turn.player.id}
@@ -166,6 +172,7 @@ export default class GamePage extends React.Component {
         <div className="right-players">
           {this.state.players.slice(5, 8).map((p, i) =>
             <Player
+              score={this.getScore(p.id)}
               username={p.username}
               isSingle={p.id === this.state.singleId}
               isTurn={p.id === this.state.turn.player.id}
@@ -206,6 +213,7 @@ export default class GamePage extends React.Component {
           {!this.isSingle() && !this.isTurn() &&
             <div>
               <Player
+                score={this.getScore(this.state.player.id)}
                 username={''}
                 isSingle={this.state.player.id === this.state.singleId}
                 isTurn={this.state.player.id === this.state.turn.player.id}
@@ -223,6 +231,8 @@ export default class GamePage extends React.Component {
 
 /**
  * Player props: {
+ *    score: number,
+ *    username: string,
  *    isSingle: true | false,
  *    isTurn: true | false,
  *    likes: [null, null],
@@ -240,7 +250,7 @@ class Player extends React.Component {
             <Card card={this.props.yikes} type="yikes" />
           </div>
         }
-        <h3>{this.props.username}</h3>
+        <h3>{this.props.username} ({this.props.score})</h3>
       </div>
     );
   }
