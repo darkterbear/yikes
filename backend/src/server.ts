@@ -30,7 +30,7 @@ app.use(
     origin: [
       'http://localhost:5000',
       'http://192.168.0.109:5000',
-      'https://yikes.terrance.com',
+      'https://yikes.terranceli.com',
     ],
     credentials: true,
   }),
