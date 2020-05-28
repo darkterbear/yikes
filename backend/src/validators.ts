@@ -6,6 +6,7 @@ export const validateUsername = [
     .exists()
     .trim()
     .isString()
+    .isLength({ max: 32 })
     .isAlphanumeric()
     .not().isEmpty(),
 ];
