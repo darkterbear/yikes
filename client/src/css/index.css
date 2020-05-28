@@ -78,6 +78,10 @@ input {
   visibility: hidden;
 }
 
+.small {
+  transform: scale(0.75);
+}
+
 #home-page {
   display: flex;
   flex-direction: column;
@@ -231,8 +235,18 @@ input {
 #game-page .player h3 {
   text-align: center;
 }
+@keyframes border-pulse {
+  0% {
+    border: 2px solid #F66D65;
+  }
+  100% {
+    border: 2px solid white;
+  }
+}
 #game-page .player .turn {
   border: 2px solid #F66D65;
+  -webkit-animation: border-pulse 0.5s infinite alternate;
+  animation: border-pulse 0.5s infinite alternate;
 }
 #game-page .card {
   width: 84px;

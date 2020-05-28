@@ -207,13 +207,28 @@ export default class GamePage extends React.Component {
           }
           {this.isSingle() && !this.isTurn() &&
             <div>
-              <h1>You're the Single<span role="img" aria-label="TM">™️</span>! It's {this.state.turn.player.username}'s turn</h1>
+              <Player
+                score={this.getScore(this.state.player.id)}
+                username={''}
+                isSingle={this.state.player.id === this.state.singleId}
+                isTurn={this.state.player.id === this.state.turn.player.id}
+                likes={this.getPlayedLikes(this.state.player.id)}
+                yikes={this.getReceivedYikes(-1)}
+              />
             </div>
           }
           {!this.isSingle() && this.isTurn() &&
             <div className="card-selection">
-              <div className="card-container">{this.getPlayableCards().map((c, i) => <Card selected={this.state.selectedCards.includes(i)} card={c} type={c.type} onClick={this.selectCard} index={i} />)}</div>
-              <button onClick={this.handlePlayCards}>Play Cards</button>
+              <div className="card-container small">{this.getPlayableCards().map((c, i) => <Card selected={this.state.selectedCards.includes(i)} card={c} type={c.type} onClick={this.selectCard} index={i} />)}</div>
+              <button onClick={this.handlePlayCards} style={{ marginTop: 0, marginBottom: '2rem' }}>Play Cards</button>
+              <Player
+                score={this.getScore(this.state.player.id)}
+                username={''}
+                isSingle={this.state.player.id === this.state.singleId}
+                isTurn={this.state.player.id === this.state.turn.player.id}
+                likes={this.getPlayedLikes(this.state.player.id)}
+                yikes={this.getReceivedYikes(-1)}
+              />
             </div>
           }
           {!this.isSingle() && !this.isTurn() &&
@@ -226,7 +241,6 @@ export default class GamePage extends React.Component {
                 likes={this.getPlayedLikes(this.state.player.id)}
                 yikes={this.getReceivedYikes(-1)}
               />
-              <h1>{this.getSinglePlayer().username} is the Single<span role="img" aria-label="TM">™️</span>! It's {this.state.turn.player.username}'s turn</h1>
             </div>
           }
         </div>
