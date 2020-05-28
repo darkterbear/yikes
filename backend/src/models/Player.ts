@@ -27,6 +27,8 @@ export default class Player {
 
   public static disconnectPlayer(id: string) {
     const player = this.getPlayer(id);
+    if (!player) { return; }
+
     const room = player.room;
     if (room) {
       // TODO: if room is in-game, <3 players means back to lobby
