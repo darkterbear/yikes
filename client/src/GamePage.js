@@ -205,6 +205,13 @@ export default class GamePage extends React.Component {
           }
           {!this.isSingle() && !this.isTurn() &&
             <div>
+              <Player
+                username={''}
+                isSingle={this.state.player.id === this.state.singleId}
+                isTurn={this.state.player.id === this.state.turn.player.id}
+                likes={this.getPlayedLikes(this.state.player.id)}
+                yikes={this.getReceivedYikes(-1)}
+              />
               <h1>{this.getSinglePlayer().username} is the Single<span role="img" aria-label="TM">™️</span>! It's {this.state.turn.player.username}'s turn</h1>
             </div>
           }
