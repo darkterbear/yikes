@@ -166,6 +166,7 @@ input {
     transform: translateX(-50%);
     
     display: flex;
+    align-items: center;
   }
 
   .right-players {
@@ -212,9 +213,12 @@ input {
   .player {
     display: inline-flex;
     flex-direction: column;
+    justify-content: center;
     height: 256px;
+    margin: 0 1rem;
 
     h1 {
+      height: calc(180px - 4rem);
       text-align: center;
       border-radius: 4px;
       padding: 2rem;

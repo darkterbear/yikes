@@ -32,7 +32,7 @@ export default (app: IRouter) => {
     middleware.validateInput,
     controller.playCard);
 
-  app.post('select-winner',
+  app.post('/select-winner',
     middleware.userExists,
     middleware.inRoom,
     middleware.inGame,

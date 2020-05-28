@@ -174,6 +174,7 @@ input {
   top: 1rem;
   transform: translateX(-50%);
   display: flex;
+  align-items: center;
 }
 #game-page .right-players {
   position: absolute;
@@ -212,9 +213,12 @@ input {
 #game-page .player {
   display: inline-flex;
   flex-direction: column;
+  justify-content: center;
   height: 256px;
+  margin: 0 1rem;
 }
 #game-page .player h1 {
+  height: calc(180px - 4rem);
   text-align: center;
   border-radius: 4px;
   padding: 2rem;

@@ -119,9 +119,9 @@ export const playCard = (req: Request, res: Response) => {
   }
 
   const playerIndex = room.players.indexOf(req.player);
-  let nextPlayerIndex = (playerIndex + 1) % room.players.length;
+  let nextPlayerIndex = playerIndex - 1 < 0 ? room.players.length - 1 : playerIndex - 1;
   if (room.players[nextPlayerIndex].id === round.singleId) {
-    nextPlayerIndex = (nextPlayerIndex + 1) % room.players.length;
+    nextPlayerIndex = nextPlayerIndex - 1 < 0 ? room.players.length - 1 : nextPlayerIndex - 1;
   }
 
   // Check if the next player already played 2 likes 1 yikes
@@ -176,14 +176,17 @@ export const selectWinner = (req: Request, res: Response) => {
   }
 
   const playerIndex = room.players.indexOf(req.player);
-  const nextSingleIndex = (playerIndex + 1) % room.players.length;
+  const nextSingleIndex = playerIndex - 1 < 0 ? room.players.length - 1 : playerIndex - 1;
   round.singleId = room.players[nextSingleIndex].id;
   turn.type = CardType.Likes;
-  turn.player = room.players[(nextSingleIndex + 1) % room.players.length];
+  turn.player = room.players[nextSingleIndex - 1 < 0 ? room.players.length - 1 : nextSingleIndex - 1];
 
   sio.to(room.code).emit('game-update', {
     singleId: round.singleId,
-    turn,
+    turn: {
+      type: turn.type,
+      player: turn.player.toShortPlayer(),
+    },
     playedCards: round.playedCards,
     scores: room.players.map((p) => ({
       id: p.id,

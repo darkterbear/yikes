@@ -67,3 +67,14 @@ export const playCards = (indices) => {
     credentials: 'include'
   })
 }
+
+export const selectWinner = (id) => {
+  return fetch(BASE_URL + '/select-winner', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id }),
+    credentials: 'include'
+  })
+}

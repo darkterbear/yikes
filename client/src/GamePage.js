@@ -1,5 +1,5 @@
 import React from 'react';
-import { socket, playCards } from './api';
+import { socket, playCards, selectWinner } from './api';
 
 export default class GamePage extends React.Component {
 
@@ -16,11 +16,11 @@ export default class GamePage extends React.Component {
   }
 
   getReceivedYikes = (index) => {
-    console.log('getting yikes of player at index' + index)
     // Get the playerId of the player to the left of this index
     index++
 
     // If this player is the single, go back 1 more
+    // Index players.length is this player
     if (index < this.state.players.length && this.state.players[index].id === this.state.singleId) {
       index++
     } else if (index === this.state.players.length && this.isSingle()) {
@@ -38,11 +38,9 @@ export default class GamePage extends React.Component {
     const cards = this.state.playedCards[leftPlayerId]
 
     if (cards && cards.length === 3) {
-      console.log(cards[2])
       return cards[2]
     }
 
-    console.log(null)
     return null
   }
 
@@ -135,6 +133,10 @@ export default class GamePage extends React.Component {
     }
   }
 
+  handleSelectWinner = async (id) => {
+    await selectWinner(id)
+  }
+
   render() {
     console.log(this.state)
     return (
@@ -187,7 +189,7 @@ export default class GamePage extends React.Component {
           {this.isSingle() && this.isTurn() &&
             <div>
               <h1>Choose who wins!</h1>
-              <div className="winner-selection">{this.state.players.map(p => <button>{p.username}</button>)}</div>
+              <div className="winner-selection">{this.state.players.map(p => <button onClick={() => { this.handleSelectWinner(p.id) }}>{p.username}</button>)}</div>
             </div>
           }
           {this.isSingle() && !this.isTurn() &&

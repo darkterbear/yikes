@@ -37,7 +37,7 @@ export default class Round {
   constructor(room: Room) {
     this.room = room;
     this.singleId = room.players[0].id;
-    this.turn = new Turn(room.players[1], CardType.Likes);
+    this.turn = new Turn(room.players[room.players.length - 1], CardType.Likes);
     this.playedCards = {};
     this.likesHands = new Map<string, Card[]>();
     this.yikesHands = new Map<string, Card[]>();
