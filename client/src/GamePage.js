@@ -93,6 +93,17 @@ export default class GamePage extends React.Component {
     }
   }
 
+  getAllCards = () => {
+    return [...this.state.likesHand.slice(), ...this.state.yikesHand.slice()].filter(c => {
+      for (const playedCard of this.state.playedCards[this.state.player.id]) {
+        if (c.text === playedCard.text) {
+          return false
+        }
+      }
+      return true
+    })
+  }
+
   componentDidMount() {
     socket.on('player-left', player => {
       // TODO:
@@ -232,7 +243,8 @@ export default class GamePage extends React.Component {
             </div>
           }
           {!this.isSingle() && !this.isTurn() &&
-            <div>
+            <div className="card-selection">
+              {/* <div className="card-container small">{this.getAllCards().map((c, i) => <Card card={c} type={c.type} index={i} />)}</div> */}
               <Player
                 score={this.getScore(this.state.player.id)}
                 username={''}
