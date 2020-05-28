@@ -49,6 +49,7 @@ body: { code: string }
 200: Success
 401: Incorrect room code (or, room is already in game)
 403: Full room (8 people)
+409: User already in room
 412: User does not exist (must call /username first)
 422: Invalid inputs
 

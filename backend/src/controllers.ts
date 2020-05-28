@@ -34,6 +34,10 @@ export const joinRoom = (req: Request, res: Response) => {
   const { code } = req.body;
   const room = Room.getRoom(code);
 
+  if (req.player.room) {
+    return res.status(409);
+  }
+
   // If room doesn't exist or is already in game, 401
   if (!room || room.state !== RoomState.WAITING) {
     return res.status(401).end();
