@@ -240,7 +240,7 @@ export default class GamePage extends React.Component {
             <div>
               <Player
                 score={this.getScore(this.state.player.id)}
-                username={''}
+                username={'you'}
                 isSingle={this.state.player.id === this.state.singleId}
                 isTurn={this.state.player.id === this.state.turn.player.id}
                 likes={this.getPlayedLikes(this.state.player.id)}
