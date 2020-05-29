@@ -249,6 +249,10 @@ input {
       -webkit-animation: border-pulse 0.5s infinite alternate;
       animation: border-pulse 0.5s infinite alternate;
     }
+
+    .sabotage {
+      box-shadow: 2px 6px 6px $red;
+    }
   }
 
   .card {

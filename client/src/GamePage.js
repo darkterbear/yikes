@@ -54,7 +54,8 @@ export default class GamePage extends React.Component {
     this.state = {
       ...props.location.state,
       scores: props.location.state.players.map(p => ({ id: p.id, score: 0 })),
-      selectedCards: []
+      selectedCards: [],
+      sabotage: -1
     }
     /**
      * state: {
@@ -104,6 +105,22 @@ export default class GamePage extends React.Component {
     })
   }
 
+  getSabotageIndex = () => {
+    if (!this.isTurn() || this.isSingle()) {
+      return -1
+    }
+
+    if (this.state.turn.type !== 'yikes') {
+      return -1
+    }
+
+    const right = this.state.players.length - 1
+    if (this.state.players[right].id === this.state.singleId) {
+      right--
+    }
+    return right
+  }
+
   componentDidMount() {
     socket.on('player-left', player => {
       // TODO:
@@ -116,7 +133,7 @@ export default class GamePage extends React.Component {
     })
 
     socket.on('game-update', ({ singleId, turn, playedCards, scores }) => {
-      this.setState({ singleId, turn, playedCards, scores })
+      this.setState({ singleId, turn, playedCards, scores, sabotage: this.getSabotageIndex() })
     })
 
     socket.on('update-hand', ({ likesHand, yikesHand }) => {
@@ -165,6 +182,7 @@ export default class GamePage extends React.Component {
         <div className="left-players">
           {this.state.players.slice(0, 2).map((p, i) =>
             <Player
+              sabotage={i === this.getSabotageIndex()}
               score={this.getScore(p.id)}
               username={p.username}
               isSingle={p.id === this.state.singleId}
@@ -177,6 +195,7 @@ export default class GamePage extends React.Component {
         <div className="top-players">
           {this.state.players.slice(2, 5).map((p, i) =>
             <Player
+              sabotage={i + 2 === this.getSabotageIndex()}
               score={this.getScore(p.id)}
               username={p.username}
               isSingle={p.id === this.state.singleId}
@@ -189,6 +208,7 @@ export default class GamePage extends React.Component {
         <div className="right-players">
           {this.state.players.slice(5, 8).map((p, i) =>
             <Player
+              sabotage={i + 5 === this.getSabotageIndex()}
               score={this.getScore(p.id)}
               username={p.username}
               isSingle={p.id === this.state.singleId}
@@ -268,7 +288,8 @@ export default class GamePage extends React.Component {
  *    isSingle: true | false,
  *    isTurn: true | false,
  *    likes: [null, null],
- *    yikes: null
+ *    yikes: null,
+ *    sabotage: boolean
  * }
  */
 class Player extends React.Component {
@@ -277,7 +298,7 @@ class Player extends React.Component {
       <div className={`player ${this.props.isTurn ? 'turn' : ''}`}>
         {this.props.isSingle ?
           <h1 className={this.props.isTurn ? 'turn' : ''}>Single<span role="img" aria-label="TM">™️</span></h1> :
-          <div className={`card-container ${this.props.isTurn ? 'turn' : ''}`}>
+          <div className={`card-container ${this.props.isTurn ? 'turn' : ''} ${this.props.sabotage ? 'sabotage' : ''}`}>
             {this.props.likes.map(likeCard => <Card card={likeCard} type="likes" />)}
             <Card card={this.props.yikes} type="yikes" />
           </div>

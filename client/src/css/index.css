@@ -248,6 +248,9 @@ input {
   -webkit-animation: border-pulse 0.5s infinite alternate;
   animation: border-pulse 0.5s infinite alternate;
 }
+#game-page .player .sabotage {
+  box-shadow: 2px 6px 6px #F66D65;
+}
 #game-page .card {
   width: 84px;
   height: 128px;
