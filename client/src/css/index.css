@@ -188,11 +188,15 @@ input {
   display: flex;
   flex-direction: column;
 }
-#game-page .player-pane {
+#game-page .bottom-players {
   position: absolute;
-  bottom: 1rem;
   left: 50%;
+  bottom: 1rem;
   transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+}
+#game-page .player-pane {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

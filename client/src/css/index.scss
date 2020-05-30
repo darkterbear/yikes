@@ -184,12 +184,17 @@ input {
     flex-direction: column;
   }
 
-  .player-pane {
+  .bottom-players {
     position: absolute;
-    bottom: 1rem;
     left: 50%;
+    bottom: 1rem;
     transform: translateX(-50%);
+    
+    display: flex;
+    align-items: flex-end;
+  }
 
+  .player-pane {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

@@ -51,11 +51,16 @@ export default class GamePage extends React.Component {
   constructor(props) {
     super(props)
 
+    // Reorder state.players based on this player's position
+    let index = 0;
+    while (props.location.state.players[index].id !== props.location.state.player.id) index++
+
     this.state = {
       ...props.location.state,
       scores: props.location.state.players.map(p => ({ id: p.id, score: 0 })),
       selectedCards: [],
-      sabotage: -1
+      sabotage: -1,
+      players: props.location.state.players.slice(index + 1, props.location.state.players.length).concat(props.location.state.players.slice(0, index))
     }
     /**
      * state: {
@@ -121,6 +126,25 @@ export default class GamePage extends React.Component {
     return right
   }
 
+  getLayout = () => {
+    switch (this.state.players.length) {
+      case 2:
+        return [[-1], [0], [], [1]]
+      case 3:
+        return [[-1], [0], [1], [2]]
+      case 4:
+        return [[-1], [0], [1, 2], [3]]
+      case 5:
+        return [[-1], [0, 1], [2], [3, 4]]
+      case 6:
+        return [[-1], [0, 1], [2, 3], [4, 5]]
+      case 7:
+        return [[0, -1, 6], [1], [2, 3, 4], [5]]
+      default:
+        throw Error(this.state.players.length + ' other players in this room')
+    }
+  }
+
   componentDidMount() {
     socket.on('player-left', player => {
       // TODO:
@@ -138,13 +162,6 @@ export default class GamePage extends React.Component {
 
     socket.on('update-hand', ({ likesHand, yikesHand }) => {
       this.setState({ likesHand, yikesHand })
-    })
-
-    // Reorder state.players based on this player's position
-    let index = 0;
-    while (this.state.players[index].id !== this.state.player.id) index++
-    this.setState({
-      players: this.state.players.slice(index + 1, this.state.players.length).concat(this.state.players.slice(0, index))
     })
   }
 
@@ -177,11 +194,13 @@ export default class GamePage extends React.Component {
 
   render() {
     console.log(this.state)
+    const layout = this.getLayout()
     return (
       <div id="game-page" className="page">
         <div className="left-players">
-          {this.state.players.slice(0, 2).map((p, i) =>
-            <Player
+          {layout[1].map((i) => {
+            const p = this.state.players[i]
+            return <Player
               sabotage={i === this.getSabotageIndex()}
               score={this.getScore(p.id)}
               username={p.username}
@@ -190,91 +209,110 @@ export default class GamePage extends React.Component {
               likes={this.getPlayedLikes(p.id)}
               yikes={this.getReceivedYikes(i)}
             />
-          )}
+          })}
         </div>
         <div className="top-players">
-          {this.state.players.slice(2, 5).map((p, i) =>
-            <Player
-              sabotage={i + 2 === this.getSabotageIndex()}
+          {layout[2].map((i) => {
+            const p = this.state.players[i]
+            return <Player
+              sabotage={i === this.getSabotageIndex()}
               score={this.getScore(p.id)}
               username={p.username}
               isSingle={p.id === this.state.singleId}
               isTurn={p.id === this.state.turn.player.id}
               likes={this.getPlayedLikes(p.id)}
-              yikes={this.getReceivedYikes(i + 2)}
+              yikes={this.getReceivedYikes(i)}
             />
-          )}
+          })}
         </div>
         <div className="right-players">
-          {this.state.players.slice(5, 8).map((p, i) =>
-            <Player
-              sabotage={i + 5 === this.getSabotageIndex()}
+          {layout[3].map((i) => {
+            const p = this.state.players[i]
+            return <Player
+              sabotage={i === this.getSabotageIndex()}
               score={this.getScore(p.id)}
               username={p.username}
               isSingle={p.id === this.state.singleId}
               isTurn={p.id === this.state.turn.player.id}
               likes={this.getPlayedLikes(p.id)}
-              yikes={this.getReceivedYikes(i + 5)}
+              yikes={this.getReceivedYikes(i)}
             />
-          )}
+          })}
         </div>
-        <div className="player-pane">
-          {/* Can be in one of a few states:
-              1. Player is single and it is their turn
-                Present a selection for which player wins
-              2. Player is single and it is not their turn
-                "You're the Single(TM)! It is _____'s turn"
-              3. Player is not single and it is their turn
-                Present a selection of cards to play
-              4. Player is not single and it is not their turn
-                "_____ is the Single(TM)! It is _____'s turn"
-                TODO: show played cards
-            */}
-          {this.isSingle() && this.isTurn() &&
-            <div>
-              <h1>Choose who wins!</h1>
-              <div className="winner-selection">{this.state.players.map(p => <button onClick={() => { this.handleSelectWinner(p.id) }}>{p.username}</button>)}</div>
-            </div>
-          }
-          {this.isSingle() && !this.isTurn() &&
-            <div>
-              <Player
-                score={this.getScore(this.state.player.id)}
-                username={'you'}
-                isSingle={this.state.player.id === this.state.singleId}
-                isTurn={this.state.player.id === this.state.turn.player.id}
-                likes={this.getPlayedLikes(this.state.player.id)}
-                yikes={this.getReceivedYikes(-1)}
-              />
-            </div>
-          }
-          {!this.isSingle() && this.isTurn() &&
-            <div className="card-selection">
-              <div className="card-container small">{this.getPlayableCards().map((c, i) => <Card selected={this.state.selectedCards.includes(i)} card={c} type={c.type} onClick={this.selectCard} index={i} />)}</div>
-              <button onClick={this.handlePlayCards} style={{ marginTop: 0, marginBottom: '2rem' }}>Play Cards</button>
-              <Player
-                score={this.getScore(this.state.player.id)}
-                username={''}
-                isSingle={this.state.player.id === this.state.singleId}
-                isTurn={this.state.player.id === this.state.turn.player.id}
-                likes={this.getPlayedLikes(this.state.player.id)}
-                yikes={this.getReceivedYikes(-1)}
-              />
-            </div>
-          }
-          {!this.isSingle() && !this.isTurn() &&
-            <div className="card-selection">
-              {/* <div className="card-container small">{this.getAllCards().map((c, i) => <Card card={c} type={c.type} index={i} />)}</div> */}
-              <Player
-                score={this.getScore(this.state.player.id)}
-                username={''}
-                isSingle={this.state.player.id === this.state.singleId}
-                isTurn={this.state.player.id === this.state.turn.player.id}
-                likes={this.getPlayedLikes(this.state.player.id)}
-                yikes={this.getReceivedYikes(-1)}
-              />
-            </div>
-          }
+        <div className="bottom-players">
+          {layout[0].map((i) => {
+            if (i === -1) {
+              return <div className="player-pane">
+                {/* Can be in one of a few states:
+                1. Player is single and it is their turn
+                  Present a selection for which player wins
+                2. Player is single and it is not their turn
+                  "You're the Single(TM)! It is _____'s turn"
+                3. Player is not single and it is their turn
+                  Present a selection of cards to play
+                4. Player is not single and it is not their turn
+                  "_____ is the Single(TM)! It is _____'s turn"
+                  TODO: show played cards
+              */}
+                {this.isSingle() && this.isTurn() &&
+                  <div>
+                    <h1>Choose who wins!</h1>
+                    <div className="winner-selection">{this.state.players.map(p => <button onClick={() => { this.handleSelectWinner(p.id) }}>{p.username}</button>)}</div>
+                  </div>
+                }
+                {this.isSingle() && !this.isTurn() &&
+                  <div>
+                    <Player
+                      score={this.getScore(this.state.player.id)}
+                      username={'you'}
+                      isSingle={this.state.player.id === this.state.singleId}
+                      isTurn={this.state.player.id === this.state.turn.player.id}
+                      likes={this.getPlayedLikes(this.state.player.id)}
+                      yikes={this.getReceivedYikes(-1)}
+                    />
+                  </div>
+                }
+                {!this.isSingle() && this.isTurn() &&
+                  <div className="card-selection">
+                    <div className="card-container small">{this.getPlayableCards().map((c, i) => <Card selected={this.state.selectedCards.includes(i)} card={c} type={c.type} onClick={this.selectCard} index={i} />)}</div>
+                    <button onClick={this.handlePlayCards} style={{ marginTop: 0, marginBottom: '2rem' }}>Play Cards</button>
+                    <Player
+                      score={this.getScore(this.state.player.id)}
+                      username={'you'}
+                      isSingle={this.state.player.id === this.state.singleId}
+                      isTurn={this.state.player.id === this.state.turn.player.id}
+                      likes={this.getPlayedLikes(this.state.player.id)}
+                      yikes={this.getReceivedYikes(-1)}
+                    />
+                  </div>
+                }
+                {!this.isSingle() && !this.isTurn() &&
+                  <div className="card-selection">
+                    {/* <div className="card-container small">{this.getAllCards().map((c, i) => <Card card={c} type={c.type} index={i} />)}</div> */}
+                    <Player
+                      score={this.getScore(this.state.player.id)}
+                      username={'you'}
+                      isSingle={this.state.player.id === this.state.singleId}
+                      isTurn={this.state.player.id === this.state.turn.player.id}
+                      likes={this.getPlayedLikes(this.state.player.id)}
+                      yikes={this.getReceivedYikes(-1)}
+                    />
+                  </div>
+                }
+              </div>
+            }
+
+            const p = this.state.players[i]
+            return <Player
+              sabotage={i === this.getSabotageIndex()}
+              score={this.getScore(p.id)}
+              username={p.username}
+              isSingle={p.id === this.state.singleId}
+              isTurn={p.id === this.state.turn.player.id}
+              likes={this.getPlayedLikes(p.id)}
+              yikes={this.getReceivedYikes(i)}
+            />
+          })}
         </div>
       </div>
     );
