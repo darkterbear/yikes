@@ -114,7 +114,7 @@ export default class GamePage extends React.Component {
       return -1
     }
 
-    const right = this.state.players.length - 1
+    let right = this.state.players.length - 1
     if (this.state.players[right].id === this.state.singleId) {
       right--
     }
