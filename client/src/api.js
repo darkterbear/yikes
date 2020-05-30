@@ -10,8 +10,8 @@ export const connectSocket = () => {
     console.log(e)
   })
 
-  socket.on('disconnect', (e) => {
-    console.log('socket disconnected')
+  socket.on('disconnect', (reason) => {
+    console.log('socket disconnected: ' + reason)
   })
 }
 
