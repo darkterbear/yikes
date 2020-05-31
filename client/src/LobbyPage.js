@@ -15,7 +15,7 @@ export default class LobbyPage extends React.Component {
     })
 
     socket.on('player-left', ({ id, newLeader }) => {
-      console.log('received player-left')
+      console.log('received player-left, new leader: ' + newLeader.username)
       this.setState({
         room: {
           ...this.state.room,
@@ -48,6 +48,11 @@ export default class LobbyPage extends React.Component {
     await startGame()
   }
 
+  handleLeave = async () => {
+    socket.disconnect()
+    this.props.history.push({ pathname: '/' })
+  }
+
   render() {
     return (
       <div id="lobby-page" className="page">
@@ -76,6 +81,7 @@ export default class LobbyPage extends React.Component {
           {this.state.player.id === this.state.room.leader.id &&
             <button className="light" onClick={this.handleStartGame}>Start Game</button>
           }
+          <button className="light" onClick={this.handleLeave}>Leave</button>
         </div>
       </div>
     );

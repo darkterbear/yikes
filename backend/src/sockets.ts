@@ -37,16 +37,10 @@ export default (server: Server, sessionMiddleware: any) => {
 
       if (room) {
         if (room.players.length > 0) {
-          if (room.leader.id === player.id) {
-            sio.to(room.code).emit('player-left', {
-              id: player.id,
-              newLeader: room.leader.toShortPlayer(),
-            });
-          } else {
-            sio.to(room.code).emit('player-left', {
-              id: player.id,
-            });
-          }
+          sio.to(room.code).emit('player-left', {
+            id: player.id,
+            newLeader: room.leader.toShortPlayer(),
+          });
         }
       }
     });

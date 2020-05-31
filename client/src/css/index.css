@@ -43,9 +43,15 @@ button {
   cursor: pointer;
   margin-top: 1rem;
 }
+button.disabled {
+  background: #999;
+}
 button.light {
   color: #F66D65;
   background: white;
+}
+button.light.disabled {
+  color: #999;
 }
 
 ::placeholder {
@@ -110,6 +116,9 @@ input {
   #home-page .content #device-notice {
     display: inline;
   }
+}
+#home-page .content p {
+  margin-top: 1rem;
 }
 
 #lobby-page {

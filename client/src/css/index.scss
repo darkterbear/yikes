@@ -16,10 +16,18 @@ button {
   padding: 0.25rem 0.5rem;
   cursor: pointer;
   margin-top: 1rem;
+  
+  &.disabled {
+    background: $gray;
+  }
 
   &.light {
     color: $red;
     background: white;
+
+    &.disabled {
+      color: $gray;
+    }
   }
 }
 
@@ -85,6 +93,10 @@ input {
       @media only screen and (max-width: 900px) {
         display: inline;
       }
+    }
+
+    p {
+      margin-top: 1rem;
     }
   }
 }
