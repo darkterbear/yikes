@@ -3,18 +3,26 @@
 module.exports = {
   apps: [
     {
-      name: 'API',
+      name: 'yikes-backend',
       script: 'build/server.js',
       cwd: 'backend/',
-      node_args: '-r dotenv/config',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 3002
+      },
       instances: 1,
       autorestart: true,
       watch: false,
     },
     {
-      name: 'Client',
-      script: 'serve -s -p 5001',
-      cwd: 'client/build/',
+      name: 'yikes-client',
+      script: 'serve',
+      cwd: 'client/',
+      env: {
+        PM2_SERVE_PATH: 'build/',
+        PM2_SERVE_PORT: 5002,
+        PM2_SERVE_SPA: 'true'
+      },
       instances: 1,
       autorestart: true,
       watch: false,

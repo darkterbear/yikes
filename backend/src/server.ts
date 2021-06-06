@@ -38,7 +38,7 @@ app.use(
 
 /* SESSION */
 const sessionMiddleware = Session({
-  secret: process.env.SESSION_SECRET,
+  secret: 'xQB6gQWFDXEu4H9dc2PLCb2Bdf28qR3e',
   resave: false,
   saveUninitialized: true,
   unset: 'destroy',
