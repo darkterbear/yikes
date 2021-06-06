@@ -193,7 +193,6 @@ export default class GamePage extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     const layout = this.getLayout()
     return (
       <div id="game-page" className="page">

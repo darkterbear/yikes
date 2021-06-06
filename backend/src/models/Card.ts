@@ -9,8 +9,8 @@ export enum CardType {
 /** Card represents a single card. */
 export default class Card {
 
-  public static likesPerPlayer = Number(process.env.LIKES_PER_PLAYER);
-  public static yikesPerPlayer = Number(process.env.YIKES_PER_PLAYER);
+  public static likesPerPlayer = 2;
+  public static yikesPerPlayer = 1;
 
   /** Returns a deep copy of likesCardSet. */
   public static newLikesDeck() {

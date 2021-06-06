@@ -45,7 +45,6 @@ export default class HomePage extends React.Component {
     if (this.state.code.length === 0) {
       const createRes = await createRoom()
       if (createRes.status === 200) {
-        console.log(player)
         this.props.history.push({
           pathname: '/lobby',
           state: {
@@ -60,7 +59,6 @@ export default class HomePage extends React.Component {
       }
     } else {
       const joinRes = await joinRoom(this.state.code)
-      console.log(joinRes.status)
       if (joinRes.status === 200) {
         this.props.history.push({
           pathname: '/lobby',

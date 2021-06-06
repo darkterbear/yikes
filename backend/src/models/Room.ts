@@ -8,7 +8,7 @@ export enum RoomState {
   ROUNDEND = 'round_end',
 }
 
-export const CODE_LENGTH = Number(process.env.CODE_LENGTH);
+export const CODE_LENGTH = 4;
 
 const randomCode = () => {
   let text = '';

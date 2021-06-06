@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf build/ && tsc",
     "start": "yarn-run-all build serve",
-    "serve": "node -r dotenv/config build/server.js"
+    "serve": "PORT=3000 node -r dotenv/config build/server.js"
   },
   "repository": {
     "type": "git",
@@ -36,10 +36,10 @@
     "express-session": "^1.17.0",
     "express-socket.io-session": "^1.3.5",
     "express-validator": "^6.4.1",
-    "socket.io": "^2.3.0",
-    "socket.io-client": "^2.3.0"
+    "socket.io": "2.3.0"
   },
   "devDependencies": {
-    "yarn-run-all": "3.1.1"
+    "yarn-run-all": "3.1.1",
+    "typescript": "3.4.3"
   }
 }

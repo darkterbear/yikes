@@ -26,7 +26,6 @@ export default class LobbyPage extends React.Component {
     })
 
     socket.on('start-game', game => {
-      console.log(game)
       this.props.history.push({
         pathname: '/game',
         state: {
